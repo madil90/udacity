@@ -23,6 +23,8 @@ app = Flask(__name__)
 model = None
 prev_image_array = None
 
+from keras.backend.tensorflow_backend import set_session
+
 
 class SimplePIController:
     def __init__(self, Kp, Ki):
@@ -97,6 +99,11 @@ def send_control(steering_angle, throttle):
 
 
 if __name__ == '__main__':
+    # limit gpu memory usage
+    config = tf.ConfigProto()
+    config.gpu_options.per_process_gpu_memory_fraction = 0.7
+    set_session(tf.Session(config=config))
+    
     parser = argparse.ArgumentParser(description='Remote Driving')
     parser.add_argument(
         'model',
