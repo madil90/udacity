@@ -7,7 +7,7 @@ import matplotlib.image as mpimg
 
 if __name__=='__main__':
     # test image is 'calibration2.jpg' right now
-    img = cv2.imread('../data\camera_cal\calibration6.jpg')
+    img = cv2.imread('../data\camera_cal\calibration2.jpg')
     pipeline = Pipeline()
     processed_img = pipeline.run_pipeline(img)
 

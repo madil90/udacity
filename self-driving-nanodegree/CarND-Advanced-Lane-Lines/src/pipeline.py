@@ -6,10 +6,16 @@ import numpy as np
 
 # Main pipeline for the project
 class Pipeline:
+    # constructor
+    def __init__(self):
+        self.camera_matrices = None
+        self.load_camera_matrices()
+
     # Perform the full image processing pipeline one by one
     def run_pipeline(self, image):
         self.calculate_calib_matrices()
-        return image
+        dist = self.undistort_image(image)
+        return dist
 
     def calculate_calib_matrices(self, calib_folder='../data/camera_cal', draw=False):
         # termination criteria TODO: check what happens if not used
@@ -47,7 +53,21 @@ class Pipeline:
 
         
         # now calculate the matrices for calibration
-        camera_matrices = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
+        ret, mtx, dist, revcs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
 
         # save these for using when distortion happens
-        print(len(camera_matrices))
+        np.savez('camera_matrices/mtx.npz', mtx)
+        np.savez('camera_matrices/dist.npz', dist)
+
+        self.camera_matrices = (mtx, dist)
+
+    def undistort_image(self, image):
+        mtx, dist = self.camera_matrices
+        h, w = image.shape[:2]
+        newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
+
+        # undistort
+        dst = cv2.undistort(image, mtx, dist, None, newcameramtx)
+        x,y,w,h = roi
+        dst = dst[y:y+h, x:x+w]
+        return dst
