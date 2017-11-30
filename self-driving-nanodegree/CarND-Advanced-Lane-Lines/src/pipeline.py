@@ -1,2 +1,5 @@
 # Main pipeline for the project
-import os
+class Pipeline:
+    # Perform the full image processing pipeline one by one
+    def run_pipeline(self, image):
+        return image
