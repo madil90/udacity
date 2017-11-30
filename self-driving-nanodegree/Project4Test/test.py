@@ -7,10 +7,9 @@ import pickle
 image = mpimg.imread('signs_vehicles_xygrad.png')
 print(image.shape)
 
-def showImage(image,cmap='viridis'):
-    plt.figure()
-    plt.imshow(image, cmap=cmap)
-    plt.waitforbuttonpress()
+def showImage(image,cmap='viridis', title='', n=0):
+    cv2.imshow(title, image)
+
 
 def abs_sobel_thresh(img, orient='x', sobel_kernel=3, thresh=(0, 255)):
     # Calculate directional gradient
@@ -63,14 +62,37 @@ def dir_threshold(img, sobel_kernel=3, thresh=(0, np.pi/2)):
 ksize = 3 # Choose a larger odd number to smooth gradient measurements
 
 # Apply each of the thresholding functions
-gradx = abs_sobel_thresh(image, orient='x', sobel_kernel=ksize, thresh=(30, 100))
-grady = abs_sobel_thresh(image, orient='y', sobel_kernel=ksize, thresh=(30, 100))
-mag_binary = mag_thresh(image, sobel_kernel=ksize, mag_thresh=(30, 100))
-dir_binary = dir_threshold(image, sobel_kernel=ksize, thresh=(0.7, 1.3))
-showImage(dir_binary, 'gray')
+gradx = abs_sobel_thresh(image, orient='x', sobel_kernel=ksize, thresh=(20, 50))
+grady = abs_sobel_thresh(image, orient='y', sobel_kernel=ksize, thresh=(50, 80))
+mag_binary = mag_thresh(image, sobel_kernel=ksize, mag_thresh=(60, 100))
+dir_binary = dir_threshold(image, sobel_kernel=ksize, thresh=(0.397, 1.17))
+
 
 
 combined = np.zeros_like(dir_binary)
 combined[((gradx == 1) & (grady == 1)) | ((mag_binary == 1) & (dir_binary == 1))] = 1
-print(combined.shape)
-showImage(combined, 'gray')
+
+fig = plt.figure()
+a = fig.add_subplot(2,3,1)
+imgplot = plt.imshow(gradx, cmap='gray')
+a.set_title('Gradient x')
+
+a = fig.add_subplot(2,3,4)
+imgplot = plt.imshow(grady, cmap='gray')
+a.set_title('Gradient y')
+
+a = fig.add_subplot(2,3,2)
+imgplot = plt.imshow(mag_binary, cmap='gray')
+a.set_title('Magnitude')
+
+a = fig.add_subplot(2,3,5)
+imgplot = plt.imshow(dir_binary, cmap='gray')
+a.set_title('Direction')
+
+a = fig.add_subplot(2,3,(3,6))
+imgplot = plt.imshow(combined, cmap='gray')
+a.set_title('Combined')
+
+
+plt.show()
+#plt.waitforbuttonpress()
