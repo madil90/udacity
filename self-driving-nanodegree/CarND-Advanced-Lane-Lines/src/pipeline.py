@@ -2,22 +2,33 @@ import glob
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-
+import os
+from thresholding import Thresholding
+from perspective import Perspective
 
 # Main pipeline for the project
 class Pipeline:
     # constructor
     def __init__(self):
+        self.mtx_file_path = 'camera_matrices/mtx.npz'
         self.camera_matrices = None
+        self.thresholding_pipeline = Thresholding()
+        self.perspective = Perspective()
         self.load_camera_matrices()
 
     # Perform the full image processing pipeline one by one
     def run_pipeline(self, image):
         self.calculate_calib_matrices()
         dist = self.undistort_image(image)
-        return dist
+        thresh_image = self.thresholding_pipeline.process_image(dist)
+        pers_image = self.perspective.warp_image(image)
+        return pers_image
 
     def calculate_calib_matrices(self, calib_folder='../data/camera_cal', draw=False):
+        # check if we have the matrices
+        if self.camera_matrices is not None:
+            return
+
         # termination criteria TODO: check what happens if not used
         nx , ny = 9, 6
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
@@ -56,10 +67,15 @@ class Pipeline:
         ret, mtx, dist, revcs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
 
         # save these for using when distortion happens
-        np.savez('camera_matrices/mtx.npz', mtx)
-        np.savez('camera_matrices/dist.npz', dist)
+        np.savez(self.mtx_file_path, mtx=mtx, dist=dist)
 
         self.camera_matrices = (mtx, dist)
+    
+    def load_camera_matrices(self):
+        if os.path.isfile(self.mtx_file_path):
+            npzfile = np.load(self.mtx_file_path)
+            mtx, dist = npzfile['mtx'], npzfile['dist']
+            self.camera_matrices = (mtx, dist)
 
     def undistort_image(self, image):
         mtx, dist = self.camera_matrices
