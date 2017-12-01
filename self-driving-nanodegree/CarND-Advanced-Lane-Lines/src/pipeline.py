@@ -21,7 +21,7 @@ class Pipeline:
         self.calculate_calib_matrices()
         dist = self.undistort_image(image)
         thresh_image = self.thresholding_pipeline.process_image(dist)
-        pers_image = self.perspective.warp_image(image)
+        pers_image = self.perspective.warp_image(thresh_image)
         return pers_image
 
     def calculate_calib_matrices(self, calib_folder='../data/camera_cal', draw=False):

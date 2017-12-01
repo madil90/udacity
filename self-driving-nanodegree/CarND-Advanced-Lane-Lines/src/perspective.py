@@ -17,21 +17,21 @@ class Perspective:
         # self.src_points = np.float32([ [195,720], [590,400], [702,400], [1120,720]])
         # self.dest_points = np.float32([ [320,720], [320,0], [930,0], [930,720] ])
         self.src_points = np.float32(
-            [[200, 700],
-            [1080, 700],
-            [570, 460],
-            [710, 460]]
+            [[249, 601],
+            [991,601],
+            [653, 389],
+            [573, 389]]
         )
 
         self.dest_points = np.float32(
-            [[260, 700],
-            [1020, 700],
-            [240, 0],
-            [1040, 0]]
+            [[300, 720],
+            [1000, 720],
+            [1000, 0],
+            [300, 0]]
         )
         self.perspective_image = '../data/test_images/straight_lines1.jpg'
         self.calculate_matrix()
-        self.plot_points()
+        #self.plot_points()
         pass
 
     def warp_image(self, image):

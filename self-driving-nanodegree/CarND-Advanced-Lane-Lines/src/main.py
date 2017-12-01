@@ -10,6 +10,7 @@ def toRGB(image):
 
 if __name__=='__main__':
     # test image is 'calibration2.jpg' right now
+    plt.ion()
     img = cv2.imread('../data/test_images/straight_lines1.jpg')
     if img is None:
         print('Image not found')
@@ -25,6 +26,6 @@ if __name__=='__main__':
     plt.imshow(toRGB(img) , cmap='gray')
     plt.title('Original')
     plt.subplot(1,2,2)
-    plt.imshow(toRGB(processed_img), cmap='gray')
+    plt.imshow(processed_img, cmap='gray')
     plt.title('Processed')
     plt.waitforbuttonpress()
