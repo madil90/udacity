@@ -8,14 +8,14 @@ class Thresholding:
     def __init__(self):
         pass
     
-    def process_image(self, image, draw=False):
+    def process_image(self, image, draw=True):
         # Choose a Sobel kernel size
         ksize = 3 # Choose a larger odd number to smooth gradient measurements
 
         # Apply each of the thresholding functions
-        gradx = self.abs_sobel_thresh(image, orient='x', sobel_kernel=ksize, thresh=(20, 50))
-        grady = self.abs_sobel_thresh(image, orient='y', sobel_kernel=ksize, thresh=(50, 80))
-        mag_binary = self.mag_thresh(image, sobel_kernel=ksize, mag_thresh=(60, 100))
+        gradx = self.abs_sobel_thresh(image, orient='x', sobel_kernel=ksize, thresh=(20, 80))
+        grady = self.abs_sobel_thresh(image, orient='y', sobel_kernel=ksize, thresh=(15, 80))
+        mag_binary = self.mag_thresh(image, sobel_kernel=ksize, mag_thresh=(30, 100))
         dir_binary = self.dir_threshold(image, sobel_kernel=ksize, thresh=(0.397, 1.17))
 
         combined = np.zeros_like(dir_binary)

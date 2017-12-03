@@ -5,6 +5,7 @@ import numpy as np
 import os
 from thresholding import Thresholding
 from perspective import Perspective
+from lines import LineSearch
 
 # Main pipeline for the project
 class Pipeline:
@@ -15,6 +16,7 @@ class Pipeline:
         self.thresholding_pipeline = Thresholding()
         self.perspective = Perspective()
         self.load_camera_matrices()
+        self.line_search = LineSearch()
 
     # Perform the full image processing pipeline one by one
     def run_pipeline(self, image):
@@ -22,6 +24,7 @@ class Pipeline:
         dist = self.undistort_image(image)
         thresh_image = self.thresholding_pipeline.process_image(dist)
         pers_image = self.perspective.warp_image(thresh_image)
+        lines_image = self.line_search.search(pers_image)
         return pers_image
 
     def calculate_calib_matrices(self, calib_folder='../data/camera_cal', draw=False):
