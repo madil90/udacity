@@ -24,8 +24,15 @@ class Pipeline:
         dist = self.undistort_image(image)
         thresh_image = self.thresholding_pipeline.process_image(dist)
         pers_image = self.perspective.warp_image(thresh_image)
-        lines_image = self.line_search.search(pers_image)
-        return pers_image
+        centroids = self.line_search.search(pers_image)
+        left_fit, right_fit, result = self.line_search.fit_polynomial(pers_image, centroids, self.perspective.pers_Minv, dist)
+
+        
+        # print undistorted image
+        # plt.figure()
+        # plt.imshow(thresh_image, cmap='gray')
+
+        return result
 
     def calculate_calib_matrices(self, calib_folder='../data/camera_cal', draw=False):
         # check if we have the matrices
@@ -63,7 +70,7 @@ class Pipeline:
                 if draw:
                     cv2.drawChessboardCorners(img, (9,6), corners,ret)
                     cv2.imshow('img',img)
-                    cv2.waitKey(500)
+                    cv2.waitKey(0)
 
         
         # now calculate the matrices for calibration

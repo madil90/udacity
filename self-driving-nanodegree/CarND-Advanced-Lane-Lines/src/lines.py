@@ -54,6 +54,77 @@ class LineSearch:
 
         return window_centroids
 
+    def fit_polynomial(self, img, window_centroids, Minv, undist):
+        rightx = np.zeros(len(window_centroids))
+        leftx = np.zeros(len(window_centroids))
+        lefty = np.zeros(len(window_centroids))
+
+        print(len(window_centroids))
+
+        for level in range(0, len(window_centroids)):
+            x_left = window_centroids[level][0]
+            y_left = img.shape[0] - (level*self.window_height + self.window_height/2)
+
+            x_right = window_centroids[level][1]
+
+            leftx[level] = x_left
+            lefty[level] = y_left
+            rightx[level] = x_right
+
+        # try to fit a polynomial to these
+        left_fit = np.polyfit(lefty, leftx, 2)
+        right_fit = np.polyfit(lefty, rightx, 2)
+
+        # new plot here
+        # plt.figure()
+        # plt.plot(leftx, lefty, 'ro')
+        # plt.axis([0, 1200, 720, 0])
+        # plt.show()
+
+        # set a new leftx lefty ploty
+        ploty = np.arange(0, undist.shape[0], 5)
+        left_fitx = np.polyval(left_fit, ploty)
+        right_fitx = np.polyval(right_fit, ploty)
+
+        # figure out the curvature here also
+        # Define conversions in x and y from pixels space to meters
+        ym_per_pix = 30/720 # meters per pixel in y dimension
+        xm_per_pix = 3.7/700 # meters per pixel in x dimension
+
+        # Fit new polynomials to x,y in world space
+        y_eval = img.shape[0]
+        left_fit_cr = np.polyfit(lefty*ym_per_pix, leftx*xm_per_pix, 2)
+        right_fit_cr = np.polyfit(lefty*ym_per_pix, rightx*xm_per_pix, 2)
+        # Calculate the new radii of curvature
+        left_curverad = ((1 + (2*left_fit_cr[0]*y_eval*ym_per_pix + left_fit_cr[1])**2)**1.5) / np.absolute(2*left_fit_cr[0])
+        right_curverad = ((1 + (2*right_fit_cr[0]*y_eval*ym_per_pix + right_fit_cr[1])**2)**1.5) / np.absolute(2*right_fit_cr[0])
+        # Now our radius of curvature is in meters
+        print(left_curverad, 'm', right_curverad, 'm')
+        # Example values: 632.1 m    626.2 m
+
+        # Create an image to draw the lines on
+        warp_zero = np.zeros_like(img).astype(np.uint8)
+        color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
+
+        # Recast the x and y points into usable format for cv2.fillPoly()
+        pts_left = np.array([np.transpose(np.vstack([left_fitx, ploty]))])
+        pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fitx, ploty])))])
+        pts = np.hstack((pts_left, pts_right))
+
+        # Draw the lane onto the warped blank image
+        cv2.fillPoly(color_warp, np.int_([pts]), (0,255, 0))
+
+        # Warp the blank back to original image space using inverse perspective matrix (Minv)
+        newwarp = cv2.warpPerspective(color_warp, Minv, (undist.shape[1], undist.shape[0])) 
+        # Combine the result with the original image
+        result = cv2.addWeighted(undist, 1, newwarp, 0.3, 0)
+        # plt.figure()
+        # plt.imshow(result)
+
+
+
+        return left_fit, right_fit, result
+
     def search(self, warped):
         window_centroids = self.find_window_centroids(warped, self.window_width, self.window_height, self.margin)
         print(window_centroids)
@@ -86,7 +157,9 @@ class LineSearch:
             output = np.array(cv2.merge((warped,warped,warped)),np.uint8)
 
         # Display the final results
-        plt.figure()
-        plt.imshow(output)
-        plt.title('window fitting results')
-        plt.show()
+        # plt.figure()
+        # plt.imshow(output)
+        # plt.title('window fitting results')
+        # plt.show()
+
+        return window_centroids

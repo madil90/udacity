@@ -8,7 +8,7 @@ class Thresholding:
     def __init__(self):
         pass
     
-    def process_image(self, image, draw=True):
+    def process_image(self, image, draw=False):
         # Choose a Sobel kernel size
         ksize = 3 # Choose a larger odd number to smooth gradient measurements
 

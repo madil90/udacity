@@ -49,9 +49,9 @@ class Perspective:
 
     def plot_points(self):
         image = mpimg.imread(self.perspective_image)
-        plt.imshow(image)
-        for point in self.src_points:
-            plt.plot(point[0],point[1],'.')
-        plt.waitforbuttonpress()
+        # plt.imshow(image)
+        # for point in self.src_points:
+        #     plt.plot(point[0],point[1],'.')
+        # plt.waitforbuttonpress()
         
 
