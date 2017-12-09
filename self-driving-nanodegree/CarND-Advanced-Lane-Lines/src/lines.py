@@ -59,7 +59,7 @@ class LineSearch:
         leftx = np.zeros(len(window_centroids))
         lefty = np.zeros(len(window_centroids))
 
-        print(len(window_centroids))
+        # print(len(window_centroids))
 
         for level in range(0, len(window_centroids)):
             x_left = window_centroids[level][0]
@@ -99,7 +99,7 @@ class LineSearch:
         left_curverad = ((1 + (2*left_fit_cr[0]*y_eval*ym_per_pix + left_fit_cr[1])**2)**1.5) / np.absolute(2*left_fit_cr[0])
         right_curverad = ((1 + (2*right_fit_cr[0]*y_eval*ym_per_pix + right_fit_cr[1])**2)**1.5) / np.absolute(2*right_fit_cr[0])
         # Now our radius of curvature is in meters
-        print(left_curverad, 'm', right_curverad, 'm')
+        # print(left_curverad, 'm', right_curverad, 'm')
         # Example values: 632.1 m    626.2 m
 
         # Create an image to draw the lines on
@@ -127,7 +127,7 @@ class LineSearch:
 
     def search(self, warped):
         window_centroids = self.find_window_centroids(warped, self.window_width, self.window_height, self.margin)
-        print(window_centroids)
+        #print(window_centroids)
 
         # If we found any window centers
         if len(window_centroids) > 0:

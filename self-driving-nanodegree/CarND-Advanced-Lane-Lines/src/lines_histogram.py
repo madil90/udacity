@@ -3,7 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 
 binary_warped = cv2.imread('output/warped.jpg')
-print(binary_warped.shape)
+# print(binary_warped.shape)
 binary_warped = cv2.cvtColor(binary_warped, cv2.COLOR_BGR2RGB)
 
 # Assuming you have created a warped binary image called "binary_warped"
