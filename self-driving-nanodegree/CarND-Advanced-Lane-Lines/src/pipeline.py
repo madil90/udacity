@@ -5,7 +5,7 @@ import numpy as np
 import os
 from thresholding import Thresholding
 from perspective import Perspective
-from lines import LineSearch
+from line_search import LineSearch
 
 # Main pipeline for the project
 class Pipeline:

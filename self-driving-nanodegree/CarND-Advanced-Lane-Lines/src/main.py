@@ -13,6 +13,7 @@ if __name__=='__main__':
     cap = cv2.VideoCapture('../data/project_video.mp4')
     n = 0
     start_time = time.time()
+    pipeline = Pipeline()
  
     # Check if camera opened successfully
     if (cap.isOpened() == False): 
@@ -28,7 +29,14 @@ if __name__=='__main__':
     # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
     out = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame_width,frame_height))
     
+    # frame no
+    frame_no = 0
+    allowed_min_frame = 250
+    allowed_max_frame = 750
+
     while(True):
+
+        # reading the video 
         ret, img = cap.read()
         
         if ret == True: 
@@ -39,8 +47,13 @@ if __name__=='__main__':
             #     print('Image not found')
             #     exit()
 
+            # check if frame no is allowed 
+            frame_no += 1
+            if (frame_no < allowed_min_frame or \
+                frame_no > allowed_max_frame):
+                continue
 
-            pipeline = Pipeline()
+
             processed_img = pipeline.run_pipeline(img)
 
             # Draw both images together
