@@ -34,10 +34,10 @@ if __name__=='__main__':
         out = cv2.VideoWriter('../data/output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (1202,621), isColor=False)
     
 
-    # frame no
+    # frame no used for testing to limit no of frames used
     frame_no = 0
     allowed_min_frame = 0
-    allowed_max_frame = 100
+    allowed_max_frame = 100000000
 
     while(True):
 
