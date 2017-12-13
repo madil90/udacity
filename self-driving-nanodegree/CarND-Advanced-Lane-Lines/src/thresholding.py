@@ -3,6 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+from time import sleep
 
 class Thresholding:
     def __init__(self):
@@ -13,7 +14,7 @@ class Thresholding:
         ksize = 3 # Choose a larger odd number to smooth gradient measurements
 
         # Apply each of the thresholding functions
-        gradx = self.abs_sobel_thresh(image, orient='x', sobel_kernel=ksize, thresh=(20, 80))
+        gradx = self.abs_sobel_thresh(image, orient='x', sobel_kernel=ksize, thresh=(12, 80))
         grady = self.abs_sobel_thresh(image, orient='y', sobel_kernel=ksize, thresh=(15, 80))
         mag_binary = self.mag_thresh(image, sobel_kernel=ksize, mag_thresh=(30, 100))
         dir_binary = self.dir_threshold(image, sobel_kernel=ksize, thresh=(0.397, 1.17))
@@ -46,13 +47,15 @@ class Thresholding:
 
 
             plt.show()
+            plt.waitforbuttonpress()
+
 
         return combined
 
     def abs_sobel_thresh(self, img, orient='x', sobel_kernel=3, thresh=(0, 255)):
         # Calculate directional gradient
         # Apply threshold
-        gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        gray = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)[:,:,2]
         # Apply x or y gradient with the OpenCV Sobel() function
         # and take the absolute value
         if orient == 'x':
@@ -69,7 +72,7 @@ class Thresholding:
 
     def mag_thresh(self, img, sobel_kernel=3, mag_thresh=(0, 255)):
         # Convert to grayscale
-        gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        gray = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)[:,:,2]
         # Take both Sobel x and y gradients
         sobelx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=sobel_kernel)
         sobely = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=sobel_kernel)
@@ -85,7 +88,7 @@ class Thresholding:
 
     def dir_threshold(self, img, sobel_kernel=3, thresh=(0, np.pi/2)):
         # Grayscale
-        gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        gray = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)[:,:,2]
         # Calculate the x and y gradients
         sobelx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=sobel_kernel)
         sobely = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=sobel_kernel)

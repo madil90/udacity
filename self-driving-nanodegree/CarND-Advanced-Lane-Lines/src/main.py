@@ -23,16 +23,21 @@ if __name__=='__main__':
     # We convert the resolutions from float to integer.
     frame_width = int(cap.get(3))
     frame_height = int(cap.get(4))
+    is_gray = False
 
     print(frame_width, frame_height)
     
     # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
-    out = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame_width,frame_height))
+    if not is_gray:
+        out = cv2.VideoWriter('../data/output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame_width,frame_height))
+    else:
+        out = cv2.VideoWriter('../data/output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (1202,621), isColor=False)
     
+
     # frame no
     frame_no = 0
-    allowed_min_frame = 250
-    allowed_max_frame = 750
+    allowed_min_frame = 0
+    allowed_max_frame = 100000
 
     while(True):
 
@@ -66,11 +71,14 @@ if __name__=='__main__':
             # plt.title('Processed')
             # plt.pause(0.05)
 
+            #print(processed_img.shape)
+            if not is_gray:
+                out.write(cv2.resize(processed_img,(frame_width, frame_height)))
+            else:
+                cv2.imshow('grayscale', cv2.resize(processed_img, (900,500)))
+                cv2.waitKey(0)
 
-            out.write(cv2.resize(processed_img,(frame_width, frame_height)))
-
-            print('Processed ', n, 'number of frames')
-            n += 1
+            print('Processed ', frame_no, 'th frame')
         else:
             break
     

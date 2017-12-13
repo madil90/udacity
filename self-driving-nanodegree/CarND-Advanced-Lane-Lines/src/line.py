@@ -11,20 +11,33 @@ class Line():
         # maximum n
         self.n = 5
         # list for coefficients
-        self.coeffs_x = deque(maxlen=self.n)
-        self.coeffs_y = [None]* self.n
-        # list of x, y points
-        self.points = [None]*self.n
-        # current best fit, x, y points 
-        self.current_coeffs = [None]*self.n
-        self.current_points = [None]*self.n
+        self.leftx_hist = deque(maxlen=5)
+        self.lefty_hist = deque(maxlen=5)
+        self.rightx_hist = deque(maxlen=5)
+
+        self.curr_leftx = None
+        self.curr_lefty = None
+        self.curr_rightx = None
 
 
-    def add_iteration(self, fit_x, fit_y):
+    def add_iteration(self, leftx, lefty, rightx):
         # add to the end of a list 
-        self.add_to_queue(self.coeffs_x, fit_x)
-        self.add_to_queue(self.coeffs_y, fit_y)
+        self.add_to_queue(self.leftx_hist, leftx)
+        self.add_to_queue(self.lefty_hist, lefty)
+        self.add_to_queue(self.rightx_hist, rightx)
 
-        # also add the actual points (should be final ones)
+    def get_average(self, queue):
+        m_sum = queue[0]
+        for i in range(1, len(queue)):
+            m_sum += queue[i]
+        return m_sum/len(queue)
+
+    def get_smoothed_line(self):
+        
+        self.curr_leftx = self.get_average(self.leftx_hist)
+        self.curr_lefty = self.get_average(self.lefty_hist)
+        self.curr_rightx = self.get_average(self.rightx_hist)
+
+        return self.curr_leftx, self.curr_lefty, self.curr_rightx
         
         

@@ -24,7 +24,7 @@ class Pipeline:
         dist = self.undistort_image(image)
         thresh_image = self.thresholding_pipeline.process_image(dist)
         pers_image = self.perspective.warp_image(thresh_image)
-        centroids = self.line_search.search(pers_image)
+        centroids,output = self.line_search.search(pers_image)
         left_fit, right_fit, result = self.line_search.fit_polynomial(pers_image, centroids, self.perspective.pers_Minv, dist)
 
         

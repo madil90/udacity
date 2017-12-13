@@ -75,6 +75,11 @@ class LineSearch:
             lefty[level] = y_left
             rightx[level] = x_right
 
+        # adding smoothing here
+        self.line_history.add_iteration(leftx, lefty, rightx)
+
+        leftx, lefty, rightx = self.line_history.get_smoothed_line()
+
         # try to fit a polynomial to these
         left_fit = np.polyfit(lefty, leftx, 2)
         right_fit = np.polyfit(lefty, rightx, 2)
@@ -89,6 +94,7 @@ class LineSearch:
         ploty = np.arange(0, undist.shape[0], 5)
         left_fitx = np.polyval(left_fit, ploty)
         right_fitx = np.polyval(right_fit, ploty)
+        
 
         # figure out the curvature here also
         # Define conversions in x and y from pixels space to meters
@@ -124,9 +130,6 @@ class LineSearch:
         result = cv2.addWeighted(undist, 1, newwarp, 0.3, 0)
         # plt.figure()
         # plt.imshow(result)
-
-        # keep a track of lines
-        self.line_history.add_iteration(left_fit, right_fit)
 
 
 
@@ -169,4 +172,4 @@ class LineSearch:
         # plt.title('window fitting results')
         # plt.show()
 
-        return window_centroids
+        return window_centroids, output
