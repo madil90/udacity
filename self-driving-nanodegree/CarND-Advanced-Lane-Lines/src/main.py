@@ -37,7 +37,7 @@ if __name__=='__main__':
     # frame no
     frame_no = 0
     allowed_min_frame = 0
-    allowed_max_frame = 100000
+    allowed_max_frame = 100
 
     while(True):
 

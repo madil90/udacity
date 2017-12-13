@@ -11,9 +11,10 @@ class Line():
         # maximum n
         self.n = 5
         # list for coefficients
-        self.leftx_hist = deque(maxlen=5)
-        self.lefty_hist = deque(maxlen=5)
-        self.rightx_hist = deque(maxlen=5)
+        self.leftx_hist = deque(maxlen=self.n)
+        self.lefty_hist = deque(maxlen=self.n)
+        self.rightx_hist = deque(maxlen=self.n)
+        self.curvature_hist = deque(maxlen=self.n)
 
         self.curr_leftx = None
         self.curr_lefty = None
