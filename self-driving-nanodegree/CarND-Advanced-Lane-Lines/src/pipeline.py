@@ -30,7 +30,14 @@ class Pipeline:
         
         # print undistorted image
         # plt.figure()
-        # plt.imshow(thresh_image, cmap='gray')
+        # plt.imshow(dist)
+        # plt.waitforbuttonpress()
+
+        # plt.imshow(pers_image, cmap='gray')
+        # plt.waitforbuttonpress()
+
+        # plt.imshow(result, cmap='gray')
+        # plt.waitforbuttonpress()
 
         return result
 

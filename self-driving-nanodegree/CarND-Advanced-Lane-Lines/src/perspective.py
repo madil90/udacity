@@ -17,17 +17,17 @@ class Perspective:
         # self.src_points = np.float32([ [195,720], [590,400], [702,400], [1120,720]])
         # self.dest_points = np.float32([ [320,720], [320,0], [930,0], [930,720] ])
         self.src_points = np.float32(
-            [[249, 601],
-            [991,601],
-            [653, 389],
-            [573, 389]]
+            [[300, 620],
+            [539,413],
+            [687, 413],
+            [1087, 620]]
         )
 
         self.dest_points = np.float32(
-            [[300, 720],
-            [1000, 720],
+            [[300, 620],
+            [300, 0],
             [1000, 0],
-            [300, 0]]
+            [1000, 620]]
         )
         self.perspective_image = '../data/test_images/straight_lines1.jpg'
         self.calculate_matrix()

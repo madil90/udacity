@@ -23,21 +23,19 @@ if __name__=='__main__':
     # We convert the resolutions from float to integer.
     frame_width = int(cap.get(3))
     frame_height = int(cap.get(4))
-    is_gray = False
+    # is_gray = True
 
     print(frame_width, frame_height)
     
     # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
-    if not is_gray:
-        out = cv2.VideoWriter('../data/output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame_width,frame_height))
-    else:
-        out = cv2.VideoWriter('../data/output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (1202,621), isColor=False)
+    out = cv2.VideoWriter('../data/output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (1202,621))
+    # out = cv2.VideoWriter('../data/output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (1202,621), isColor=False)
     
 
     # frame no used for testing to limit no of frames used
     frame_no = 0
     allowed_min_frame = 0
-    allowed_max_frame = 100000000
+    allowed_max_frame = 30
 
     while(True):
 
@@ -60,6 +58,7 @@ if __name__=='__main__':
 
 
             processed_img = pipeline.run_pipeline(img)
+            frame_height, frame_width, channels = processed_img.shape
 
             # Draw both images together
             # plt.figure(0)
@@ -71,12 +70,8 @@ if __name__=='__main__':
             # plt.title('Processed')
             # plt.pause(0.05)
 
-            #print(processed_img.shape)
-            if not is_gray:
-                out.write(cv2.resize(processed_img,(frame_width, frame_height)))
-            else:
-                cv2.imshow('grayscale', cv2.resize(processed_img, (900,500)))
-                cv2.waitKey(0)
+            print(processed_img.shape)
+            out.write(cv2.resize(processed_img,(frame_width, frame_height)))
 
             print('Processed ', frame_no, 'th frame')
         else:
