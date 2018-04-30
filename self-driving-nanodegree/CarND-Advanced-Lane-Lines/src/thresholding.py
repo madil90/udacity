@@ -14,13 +14,16 @@ class Thresholding:
         ksize = 3 # Choose a larger odd number to smooth gradient measurements
 
         # Apply each of the thresholding functions
-        gradx = self.abs_sobel_thresh(image, orient='x', sobel_kernel=ksize, thresh=(12, 80))
-        grady = self.abs_sobel_thresh(image, orient='y', sobel_kernel=ksize, thresh=(15, 80))
-        mag_binary = self.mag_thresh(image, sobel_kernel=ksize, mag_thresh=(30, 100))
-        dir_binary = self.dir_threshold(image, sobel_kernel=ksize, thresh=(0.397, 1.17))
+        gradx = self.abs_sobel_thresh(image, orient='x', sobel_kernel=ksize, thresh=(12, 150))
+        grady = self.abs_sobel_thresh(image, orient='y', sobel_kernel=ksize, thresh=(35, 175))
+        mag_binary = self.mag_thresh(image, sobel_kernel=ksize, mag_thresh=(55, 255))
+        dir_binary = self.dir_threshold(image, sobel_kernel=ksize, thresh=(0.65, 0.80))
 
         combined = np.zeros_like(dir_binary)
-        combined[((gradx == 1) & (grady == 1)) | ((mag_binary == 1) & (dir_binary == 1))] = 1
+        combined[((gradx == 1) & (grady == 1)) | ((mag_binary == 1) )] = 1
+
+        plt.imshow(mag_binary, cmap='gray')
+        plt.waitforbuttonpress()
 
         # perhaps draw these images and save for testing? 
         if draw:

@@ -11,7 +11,7 @@ class LineSearch:
         # window settings
         self.window_width = 50 
         self.window_height = 60 # Break image into 9 vertical layers since image height is 720
-        self.margin = 100 # How much to slide left and right for searching
+        self.margin = 50 # How much to slide left and right for searching
 
         # searching for the line 
         self.line_history = Line()
@@ -171,8 +171,9 @@ class LineSearch:
 
         # Display the final results
         # plt.figure()
-        # plt.imshow(output)
+        plt.imshow(output)
         # plt.title('window fitting results')
         # plt.show()
+        plt.waitforbuttonpress()
 
         return window_centroids, output

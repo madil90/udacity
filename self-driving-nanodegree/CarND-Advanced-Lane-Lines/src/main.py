@@ -70,7 +70,7 @@ if __name__=='__main__':
             # plt.title('Processed')
             # plt.pause(0.05)
 
-            print(processed_img.shape)
+            # print(processed_img.shape)
             out.write(cv2.resize(processed_img,(frame_width, frame_height)))
 
             print('Processed ', frame_no, 'th frame')
